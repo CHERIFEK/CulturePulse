@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import MoodSelector from './MoodSelector';
-import { Send, Sparkles } from 'lucide-react';
+import { Send, Sparkles, AlertTriangle } from 'lucide-react';
 import { Submission } from '../types';
+import { GOOGLE_SCRIPT_URL } from '../services/sheetService';
 
 interface SubmitViewProps {
-  onSubmit: (submission: Submission) => void;
+  onSubmit: (submission: Submission) => Promise<void>;
 }
 
 const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
@@ -12,26 +13,25 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
   const [feedback, setFeedback] = useState<string>('');
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!feedback.trim()) return;
 
     setIsAnimating(true);
     
-    // Simulate a small network delay for UX
-    setTimeout(() => {
-      const newSubmission: Submission = {
-        id: crypto.randomUUID(),
-        mood,
-        feedback: feedback.trim(),
-        timestamp: Date.now(),
-      };
-      onSubmit(newSubmission);
-      // Reset form handled by parent switching view, but we can reset state here too
-      setMood(3);
-      setFeedback('');
-      setIsAnimating(false);
-    }, 600);
+    const newSubmission: Submission = {
+      id: crypto.randomUUID(),
+      mood,
+      feedback: feedback.trim(),
+      timestamp: Date.now(),
+    };
+
+    await onSubmit(newSubmission);
+    
+    // Reset form
+    setMood(3);
+    setFeedback('');
+    setIsAnimating(false);
   };
 
   return (
@@ -40,6 +40,15 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
         <h2 className="text-2xl font-bold text-slate-800">Weekly Pulse Check</h2>
         <p className="text-slate-500">Your feedback is anonymous and helps us improve.</p>
       </div>
+      
+      {!GOOGLE_SCRIPT_URL && (
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl text-sm flex gap-2 items-start">
+           <AlertTriangle className="shrink-0 mt-0.5" size={16} />
+           <p>
+             <strong>Configuration Needed:</strong> Please add your Google Apps Script Web App URL to <code>services/sheetService.ts</code> to enable data saving.
+           </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <MoodSelector value={mood} onChange={setMood} />
