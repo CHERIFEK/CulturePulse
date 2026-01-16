@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Wand2, Loader2, Quote, TrendingUp, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Wand2, Loader2, Quote, TrendingUp, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
 import { Submission, ActionPlanResponse } from '../types';
 import { generateActionPlan } from '../services/geminiService';
 
 interface DashboardViewProps {
   submissions: Submission[];
+  onBack: () => void;
 }
 
-const DashboardView: React.FC<DashboardViewProps> = ({ submissions }) => {
+const DashboardView: React.FC<DashboardViewProps> = ({ submissions, onBack }) => {
   const [actionPlan, setActionPlan] = useState<ActionPlanResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -204,6 +205,18 @@ const DashboardView: React.FC<DashboardViewProps> = ({ submissions }) => {
           ))
         )}
       </div>
+
+      {/* Footer Navigation */}
+      <div className="text-center mt-12 mb-6">
+         <button 
+           onClick={onBack}
+           className="text-xs text-slate-400 hover:text-brand-500 transition-colors flex items-center justify-center gap-1 mx-auto"
+         >
+           <Sparkles size={12} />
+           <span>Powered by Central Innovation Team</span>
+         </button>
+      </div>
+
     </div>
   );
 };

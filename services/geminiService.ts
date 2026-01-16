@@ -13,20 +13,20 @@ export const generateActionPlan = async (submissions: Submission[]): Promise<Act
   }
 
   // Prepare the data for the prompt
-  const feedbackText = submissions.map(s => `Mood: ${s.mood}/5, Comment: "${s.feedback}"`).join("\n");
+  const feedbackText = submissions.map(s => `Rating: ${s.mood}/5, Comment: "${s.feedback}"`).join("\n");
 
   const prompt = `
-    You are an expert HR consultant and team culture specialist. 
-    Analyze the following anonymous employee feedback and mood ratings.
+    You are an expert Learning & Development specialist and AI instructor. 
+    Analyze the following feedback from attendees of a recent AI training session.
     
     Data:
     ${feedbackText}
     
     Task:
-    1. Write a 1-sentence summary of the overall team sentiment.
-    2. Create a specific, actionable 3-point plan for management to improve or maintain the culture based on this feedback.
+    1. Write a 1-sentence summary of the overall student sentiment.
+    2. Create a specific, actionable 3-point plan to improve future training sessions based on this feedback (e.g. content adjustments, pacing, examples).
     
-    Keep the tone constructive, empathetic, and professional.
+    Keep the tone constructive and professional.
   `;
 
   try {

@@ -1,5 +1,5 @@
 {
-  "name": "CulturePulse VF",
-  "description": "An anonymous team culture dashboard that tracks mood and uses AI to generate actionable management insights.",
+  "name": "AI Training Feedback",
+  "description": "An anonymous feedback tool for AI training sessions.",
   "requestFramePermissions": []
 }

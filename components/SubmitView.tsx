@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import MoodSelector from './MoodSelector';
-import { Send, Sparkles, AlertTriangle } from 'lucide-react';
+import { Send, Sparkles, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Submission } from '../types';
 import { GOOGLE_SCRIPT_URL } from '../services/sheetService';
 
 interface SubmitViewProps {
   onSubmit: (submission: Submission) => Promise<void>;
+  onSecretDashboardAccess: () => void;
 }
 
-const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
+const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit, onSecretDashboardAccess }) => {
   const [mood, setMood] = useState<number>(3);
   const [feedback, setFeedback] = useState<string>('');
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,17 +30,49 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
 
     await onSubmit(newSubmission);
     
-    // Reset form
+    // Show success message instead of redirecting
+    setIsAnimating(false);
+    setShowSuccess(true);
+    
+    // Reset form state behind the scenes
     setMood(3);
     setFeedback('');
-    setIsAnimating(false);
   };
+
+  if (showSuccess) {
+    return (
+        <div className="max-w-md mx-auto w-full px-4 py-12 flex flex-col items-center text-center gap-6 animate-in fade-in zoom-in duration-300">
+            <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                <CheckCircle size={40} />
+            </div>
+            <h2 className="text-3xl font-bold text-slate-800">Thank You!</h2>
+            <p className="text-slate-500 max-w-xs leading-relaxed">Your feedback is incredibly valuable and helps us improve our AI training sessions.</p>
+            
+            <button 
+                onClick={() => setShowSuccess(false)}
+                className="mt-6 px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-full font-bold shadow-lg shadow-brand-200 transition-all active:scale-95"
+            >
+                Submit Another Response
+            </button>
+
+            <div className="mt-12">
+               <button 
+                 onClick={onSecretDashboardAccess}
+                 className="text-xs text-slate-300 hover:text-slate-400 flex items-center justify-center gap-1 transition-colors"
+               >
+                 <Sparkles size={12} />
+                 <span>Powered by Central Innovation Team</span>
+               </button>
+            </div>
+        </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto w-full px-4 py-6 flex flex-col gap-6">
       <div className="text-center space-y-2 mb-4">
-        <h2 className="text-2xl font-bold text-slate-800">Weekly Pulse Check</h2>
-        <p className="text-slate-500">Your feedback is anonymous and helps us improve.</p>
+        <h2 className="text-2xl font-bold text-slate-800">AI Course Feedback</h2>
+        <p className="text-slate-500">How was your recent AI training experience?</p>
       </div>
       
       {!GOOGLE_SCRIPT_URL && (
@@ -55,13 +89,13 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="feedback" className="text-sm font-medium text-slate-700">
-            What's on your mind?
+             Comments
           </label>
           <textarea
             id="feedback"
             rows={4}
             className="w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none transition-all resize-none text-slate-700 placeholder:text-slate-400 bg-white"
-            placeholder="Share your thoughts on projects, team vibes, or office snacks..."
+            placeholder="What were your main takeaways or suggestions?"
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             required
@@ -86,10 +120,14 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit }) => {
       </form>
       
       <div className="text-center">
-         <p className="text-xs text-slate-400 flex items-center justify-center gap-1">
+         <button 
+           type="button"
+           onClick={onSecretDashboardAccess}
+           className="text-xs text-slate-400 hover:text-brand-500 transition-colors flex items-center justify-center gap-1 mx-auto"
+         >
            <Sparkles size={12} />
-           <span>Powered by CulturePulse AI</span>
-         </p>
+           <span>Powered by Central Innovation Team</span>
+         </button>
       </div>
     </div>
   );

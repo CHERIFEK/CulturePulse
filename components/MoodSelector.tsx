@@ -17,7 +17,7 @@ const MoodSelector: React.FC<MoodSelectorProps> = ({ value, onChange }) => {
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      <label className="text-sm font-medium text-slate-700">How are you feeling?</label>
+      <label className="text-sm font-medium text-slate-700">Overall, how helpful was the training?</label>
       <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
         {moods.map((m) => {
           const Icon = m.icon;
