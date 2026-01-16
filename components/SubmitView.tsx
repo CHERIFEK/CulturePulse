@@ -61,7 +61,7 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit, onSecretDashboardAcce
                  className="text-xs text-slate-300 hover:text-slate-400 flex items-center justify-center gap-1 transition-colors"
                >
                  <Sparkles size={12} />
-                 <span>Powered by Central Innovation Team</span>
+                 <span>Powered by Survey Master</span>
                </button>
             </div>
         </div>
@@ -126,7 +126,7 @@ const SubmitView: React.FC<SubmitViewProps> = ({ onSubmit, onSecretDashboardAcce
            className="text-xs text-slate-400 hover:text-brand-500 transition-colors flex items-center justify-center gap-1 mx-auto"
          >
            <Sparkles size={12} />
-           <span>Powered by Central Innovation Team</span>
+           <span>Powered by Survey Master</span>
          </button>
       </div>
     </div>
